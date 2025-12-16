@@ -26,6 +26,9 @@ ENV DATABASE_URL=""
 # Build TypeScript
 RUN npm run build
 
+# Copy email templates to dist folder (they're not compiled by TypeScript)
+RUN mkdir -p dist/templates && cp -r src/templates/* dist/templates/
+
 # Expose port (Cloud Run will set PORT env var)
 EXPOSE 8080
 
