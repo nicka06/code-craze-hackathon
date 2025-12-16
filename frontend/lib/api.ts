@@ -53,7 +53,7 @@ export async function verifyAuth() {
 
 // Submission APIs
 export async function submitPost(formData: FormData) {
-  // Real submission - calls backend and sends emails
+  // Real submission - saves to DB, uploads files, sends emails
   return apiCall('/api/submissions', {
     method: 'POST',
     body: formData, // multipart/form-data
@@ -64,40 +64,32 @@ export async function getSubmission(id: number) {
   return apiCall(`/api/submissions/${id}`);
 }
 
-// Admin APIs
+// Admin APIs (REAL - calls backend)
 export async function getPosts(status?: string) {
-  // Fake data - return empty array for now
-  await new Promise(resolve => setTimeout(resolve, 500));
-  return { 
-    success: true, 
-    data: [],
-    total: 0
-  };
+  const query = status ? `?status=${status}` : '';
+  return apiCall(`/api/admin/posts${query}`);
 }
 
 export async function getPostStats() {
-  await new Promise(resolve => setTimeout(resolve, 500));
-  return { 
-    pending: 0,
-    approved: 0,
-    declined: 0,
-    posted: 0
-  };
+  return apiCall('/api/admin/posts/stats');
 }
 
 export async function getPost(id: number) {
-  await new Promise(resolve => setTimeout(resolve, 500));
-  throw new Error('Post not found');
+  return apiCall(`/api/admin/posts/${id}`);
 }
 
 export async function approvePost(id: number) {
-  await new Promise(resolve => setTimeout(resolve, 500));
-  return { success: true, message: 'Post approved' };
+  return apiCall(`/api/admin/posts/${id}/approve`, {
+    method: 'PATCH',
+  });
 }
 
 export async function declinePost(id: number, declined_message: string) {
-  await new Promise(resolve => setTimeout(resolve, 500));
-  return { success: true, message: 'Post declined' };
+  return apiCall(`/api/admin/posts/${id}/decline`, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ declined_message }),
+  });
 }
 
 export async function publishPost(id: number) {
