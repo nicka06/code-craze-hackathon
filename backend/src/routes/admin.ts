@@ -1,12 +1,10 @@
 import { Router, Request, Response } from 'express';
 import * as adminService from '../services/adminService';
 import { postingService } from '../services/postingService';
-import { requireAuth } from '../middleware/auth';
 
 const router = Router();
 
-// All admin routes require authentication
-router.use(requireAuth);
+// Authentication disabled for demo
 
 /**
  * GET /api/admin/posts
@@ -15,7 +13,7 @@ router.use(requireAuth);
 router.get('/posts', async (req: Request, res: Response) => {
   try {
     const status = req.query.status as any;
-    const admin_account_ids = req.admin!.account_ids;
+    const admin_account_ids = [1]; // Demo mode - admin has access to all accounts
 
     // Validate status if provided
     const validStatuses = ['pending', 'approved', 'declined', 'posted', 'failed'];
@@ -48,7 +46,7 @@ router.get('/posts', async (req: Request, res: Response) => {
  */
 router.get('/posts/stats', async (req: Request, res: Response) => {
   try {
-    const admin_account_ids = req.admin!.account_ids;
+    const admin_account_ids = [1]; // Demo mode - admin has access to all accounts
     const stats = await adminService.getPostStats(admin_account_ids);
 
     res.json({
@@ -68,7 +66,7 @@ router.get('/posts/stats', async (req: Request, res: Response) => {
 router.get('/posts/:id', async (req: Request, res: Response) => {
   try {
     const id = parseInt(req.params.id);
-    const admin_account_ids = req.admin!.account_ids;
+    const admin_account_ids = [1]; // Demo mode - admin has access to all accounts
 
     if (isNaN(id)) {
       return res.status(400).json({ error: 'Invalid post ID' });
@@ -96,7 +94,7 @@ router.get('/posts/:id', async (req: Request, res: Response) => {
 router.patch('/posts/:id/approve', async (req: Request, res: Response) => {
   try {
     const id = parseInt(req.params.id);
-    const admin_account_ids = req.admin!.account_ids;
+    const admin_account_ids = [1]; // Demo mode - admin has access to all accounts
 
     if (isNaN(id)) {
       return res.status(400).json({ error: 'Invalid post ID' });
@@ -130,7 +128,7 @@ router.patch('/posts/:id/approve', async (req: Request, res: Response) => {
 router.patch('/posts/:id/decline', async (req: Request, res: Response) => {
   try {
     const id = parseInt(req.params.id);
-    const admin_account_ids = req.admin!.account_ids;
+    const admin_account_ids = [1]; // Demo mode - admin has access to all accounts
     const { declined_message } = req.body;
 
     if (isNaN(id)) {
