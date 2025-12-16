@@ -1,0 +1,96 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  }
+
+//------------------------------------
+// Models
+//------------------------------------
+
+model Account {
+  id  Int @id @default(autoincrement())
+  instagram_username  String @unique @db.VarChar(100)
+  instagram_id  String  @db.VarChar(255)
+  facebook_id String @db.VarChar(255)
+  access_token  String  @db.Text
+  is_active Boolean  @default(true)
+  created_at  DateTime  @default(now())
+
+  // Relations
+  posts Post[]
+
+  // Indexes
+  // Indexes
+  @@index([is_active])
+  @@map("accounts")
+}
+
+// Admin model - Users who moderate submissions
+model Admin {
+  id          Int      @id @default(autoincrement())
+  username    String   @unique @db.VarChar(100)
+  password    String   @db.VarChar(255)
+  account_ids Int[]
+  created_at  DateTime @default(now())
+  
+  // Indexes
+  @@index([username])
+  @@map("admins")
+}
+
+// Post model - User submissions
+model Post {
+  id                 Int       @id @default(autoincrement())
+  account_id         Int
+  caption            String    @db.Text
+  media              String[]
+  email              String    @db.VarChar(255)
+  instagram_username String?   @db.VarChar(255)
+  status             Status    @default(pending)
+  created_at         DateTime  @default(now())
+  posted_at          DateTime?
+  declined_message   String?   @db.Text
+  error_message      String?   @db.Text
+  
+  // Relations
+  account Account @relation(fields: [account_id], references: [id], onDelete: Cascade)
+  
+  // Indexes
+  @@index([account_id, status])
+  @@index([created_at])
+  @@index([status])
+  @@map("posts")
+}
+
+// AdminRequest model - Requests for admin access
+model AdminRequest {
+  id         Int      @id @default(autoincrement())
+  email      String   @db.VarChar(255)
+  message    String   @db.Text
+  created_at DateTime @default(now())
+  
+  // Indexes
+  @@index([created_at])
+  @@map("admin_requests")
+}
+
+//------------------------------------
+// Enums
+//------------------------------------
+
+enum Status {
+  pending
+  approved
+  declined
+  posted
+  failed
+}
