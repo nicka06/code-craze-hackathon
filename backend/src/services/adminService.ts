@@ -1,4 +1,5 @@
 import prisma from '../config/prisma';
+import * as emailService from './emailService';
 
 /**
  * Admin Service
@@ -98,8 +99,15 @@ export async function approvePost(id: number, admin_account_ids: number[]) {
     },
   });
 
-  // TODO: Send approval email to user
-  // await emailService.sendApprovalEmail(updatedPost.email, updatedPost);
+  // Send approval email to user
+  try {
+    await emailService.sendApprovalNotification(updatedPost.email, {
+      accountName: updatedPost.account.instagram_username,
+    });
+  } catch (error) {
+    console.error('Failed to send approval email:', error);
+    // Don't fail the approval if email fails
+  }
 
   return updatedPost;
 }
@@ -139,8 +147,16 @@ export async function declinePost(
     },
   });
 
-  // TODO: Send decline email to user
-  // await emailService.sendDeclineEmail(updatedPost.email, updatedPost, declined_message);
+  // Send decline email to user
+  try {
+    await emailService.sendDeclineNotification(updatedPost.email, {
+      accountName: updatedPost.account.instagram_username,
+      declineReason: declined_message.trim(),
+    });
+  } catch (error) {
+    console.error('Failed to send decline email:', error);
+    // Don't fail the decline if email fails
+  }
 
   return updatedPost;
 }

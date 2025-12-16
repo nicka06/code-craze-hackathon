@@ -1,4 +1,6 @@
 import prisma from '../config/prisma';
+import * as emailService from './emailService';
+import * as storageService from './storageService';
 
 /**
  * Submission Service
@@ -9,15 +11,15 @@ interface CreateSubmissionData {
   account_id: number;
   caption: string;
   email: string;
-  media: string[];
   instagram_username?: string;
+  files: Express.Multer.File[];
 }
 
 /**
  * Create a new submission
  */
 export async function createSubmission(data: CreateSubmissionData) {
-  const { account_id, caption, email, media, instagram_username } = data;
+  const { account_id, caption, email, instagram_username, files } = data;
 
   // Validate account exists and is active
   const account = await prisma.account.findUnique({
@@ -32,13 +34,25 @@ export async function createSubmission(data: CreateSubmissionData) {
     throw new Error('This account is not accepting submissions');
   }
 
+  // Upload files to GCS
+  const mediaUrls = await Promise.all(
+    files.map(file =>
+      storageService.uploadFile({
+        buffer: file.buffer,
+        originalName: file.originalname,
+        mimetype: file.mimetype,
+        folder: 'submissions',
+      })
+    )
+  );
+
   // Create post in database
   const post = await prisma.post.create({
     data: {
       account_id,
       caption,
       email,
-      media,
+      media: mediaUrls,
       instagram_username: instagram_username || null,
       status: 'pending',
     },
@@ -51,6 +65,17 @@ export async function createSubmission(data: CreateSubmissionData) {
       },
     },
   });
+
+  // Send confirmation email to user
+  try {
+    await emailService.sendSubmissionConfirmation(email, {
+      accountName: account.instagram_username,
+      submissionId: post.id.toString(),
+    });
+  } catch (error) {
+    console.error('Failed to send confirmation email:', error);
+    // Don't fail the submission if email fails
+  }
 
   return post;
 }

@@ -1,41 +1,42 @@
 import { Router, Request, Response } from 'express';
+import multer from 'multer';
 import * as submissionService from '../services/submissionService';
 
 const router = Router();
+
+// Configure multer for file uploads
+const upload = multer({
+  storage: multer.memoryStorage(),
+  limits: { fileSize: 100 * 1024 * 1024 }, // 100 MB max
+});
 
 /**
  * POST /api/submissions
  * Create a new submission
  */
-router.post('/', async (req: Request, res: Response) => {
+router.post('/', upload.array('media', 10), async (req: Request, res: Response) => {
   try {
     const {
       account_id,
       caption,
       email,
-      media,
       instagram_username,
     } = req.body;
 
+    const files = req.files as Express.Multer.File[];
+
     // Validate required fields
-    if (!account_id || !caption || !email || !media) {
+    if (!account_id || !caption || !email) {
       return res.status(400).json({
         error: 'Missing required fields',
-        required: ['account_id', 'caption', 'email', 'media'],
+        required: ['account_id', 'caption', 'email', 'media files'],
       });
     }
 
-    // Validate media is array
-    if (!Array.isArray(media) || media.length === 0) {
+    // Validate files uploaded
+    if (!files || files.length === 0) {
       return res.status(400).json({
-        error: 'Media must be a non-empty array',
-      });
-    }
-
-    // Validate media count (max 10)
-    if (media.length > 10) {
-      return res.status(400).json({
-        error: 'Maximum 10 media files allowed',
+        error: 'At least one media file required',
       });
     }
 
@@ -44,8 +45,8 @@ router.post('/', async (req: Request, res: Response) => {
       account_id: parseInt(account_id),
       caption,
       email,
-      media,
       instagram_username,
+      files,
     });
 
     // Success response
