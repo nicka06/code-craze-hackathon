@@ -56,7 +56,6 @@ model Post {
   email              String    @db.VarChar(255)
   instagram_username String?   @db.VarChar(255)
   status             Status    @default(pending)
-  instagram_post_id  String?   @db.VarChar(255)
   created_at         DateTime  @default(now())
   posted_at          DateTime?
   declined_message   String?   @db.Text
