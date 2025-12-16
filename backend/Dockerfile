@@ -18,8 +18,10 @@ RUN npm ci --only=production
 # Copy source code
 COPY . .
 
-# Generate Prisma Client
+# Generate Prisma Client (with dummy DATABASE_URL for build time)
+ENV DATABASE_URL="postgresql://user:pass@localhost:5432/db"
 RUN npx prisma generate
+ENV DATABASE_URL=""
 
 # Build TypeScript
 RUN npm run build
