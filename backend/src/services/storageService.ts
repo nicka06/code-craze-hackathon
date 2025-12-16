@@ -38,10 +38,7 @@ export async function uploadFile(options: UploadFileOptions): Promise<string> {
     },
   });
 
-  // Make the file public (optional - you can also use signed URLs)
-  await file.makePublic();
-
-  // Return the public URL
+  // Return the public URL (file is accessible via bucket IAM permissions)
   return `https://storage.googleapis.com/${bucket.name}/${filepath}`;
 }
 
