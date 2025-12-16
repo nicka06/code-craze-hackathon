@@ -10,13 +10,8 @@ export function middleware(request: NextRequest) {
       return NextResponse.rewrite(new URL('/admin' + request.nextUrl.pathname, request.url));
     }
   }
-  // Public domain - block admin routes
-  else {
-    if (request.nextUrl.pathname.startsWith('/admin')) {
-      return NextResponse.redirect(new URL('/', request.url));
-    }
-  }
   
+  // Allow /admin routes on main domain
   return NextResponse.next();
 }
 
