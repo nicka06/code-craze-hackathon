@@ -1,36 +1,37 @@
 import Link from 'next/link';
-
-// For now, hardcoded accounts - will fetch from API later
-const accounts = [
-  { id: 1, slug: 'example1', instagram_username: '@example_account1' },
-  { id: 2, slug: 'example2', instagram_username: '@example_account2' },
-];
+import Image from 'next/image';
 
 export default function AccountsPage() {
   return (
-    <div className="min-h-screen bg-gray-50 py-12 px-4">
-      <div className="max-w-4xl mx-auto">
-        <h1 className="text-4xl font-bold text-center mb-2">Choose an Account</h1>
-        <p className="text-center text-gray-600 mb-8">Select an account to submit your content</p>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {accounts.map((account) => (
-            <Link
-              key={account.id}
-              href={`/${account.slug}`}
-              className="bg-white p-8 rounded-lg shadow-md hover:shadow-lg transition text-center"
-            >
-              <div className="text-3xl mb-4">📱</div>
-              <h2 className="text-2xl font-bold mb-2">{account.instagram_username}</h2>
-              <p className="text-purple-600 font-semibold">Click to Submit →</p>
-            </Link>
-          ))}
-        </div>
-        
-        <div className="text-center mt-12">
-          <Link href="/" className="text-gray-600 hover:text-gray-900">
-            ← Back to Home
+    <div className="min-h-screen bg-[#0a0a0a]">
+      <div className="min-h-screen flex items-center justify-center px-4">
+        <div className="text-center">
+          {/* Tattle News Logo */}
+          <div className="mb-8 flex justify-center">
+            <Image 
+              src="/Tattle News Logo (5).png" 
+              alt="Tattle News" 
+              width={200} 
+              height={200}
+              className="w-48 h-auto"
+            />
+          </div>
+          
+          <h1 className="text-6xl font-bold text-white mb-4">Tattle News</h1>
+          <p className="text-xl text-gray-400 mb-12">Share your story with our community</p>
+          
+          <Link
+            href="/tattle-news"
+            className="inline-block bg-linear-to-r from-[#5ce7ff] to-[#ff1fa9] text-white px-12 py-4 rounded-full text-lg font-bold hover:shadow-[0_0_40px_rgba(92,231,255,0.3)] hover:scale-105 transition-all"
+          >
+            Submit Your Content
           </Link>
+          
+          <div className="mt-12">
+            <Link href="/" className="text-gray-500 hover:text-gray-300 transition">
+              ← Back to Home
+            </Link>
+          </div>
         </div>
       </div>
     </div>

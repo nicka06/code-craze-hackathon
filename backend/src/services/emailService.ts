@@ -154,3 +154,41 @@ export async function sendPostFailureNotification(
     html
   );
 }
+
+/**
+ * Send post success notification to user
+ */
+export async function sendPostSuccessEmail(
+  userEmail: string,
+  instagramUsername: string,
+  instagramPostId: string
+): Promise<void> {
+  const html = await loadTemplate('post-success', {
+    instagramUsername,
+    postUrl: `https://instagram.com/p/${instagramPostId}`,
+  });
+  await sendEmail(
+    userEmail,
+    '🎉 Your post is live on Instagram!',
+    html
+  );
+}
+
+/**
+ * Send post failure notification to user
+ */
+export async function sendPostFailureEmail(
+  userEmail: string,
+  instagramUsername: string,
+  errorMessage: string
+): Promise<void> {
+  const html = await loadTemplate('post-failure', {
+    instagramUsername,
+    errorMessage,
+  });
+  await sendEmail(
+    userEmail,
+    'Issue publishing your post',
+    html
+  );
+}

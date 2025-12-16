@@ -1,5 +1,5 @@
 import prisma from '../config/prisma';
-import redisClient from '../config/redis';
+import redisClient, { isRedisAvailable } from '../config/redis';
 import bcrypt from 'bcryptjs';
 import crypto from 'crypto';
 
@@ -22,6 +22,11 @@ interface SessionData {
  */
 export async function login(data: LoginData) {
   const { username, password } = data;
+
+  // Check if Redis is available
+  if (!isRedisAvailable()) {
+    throw new Error('Authentication unavailable - Redis not connected');
+  }
 
   // Find admin by username
   const admin = await prisma.admin.findUnique({
@@ -69,6 +74,10 @@ export async function login(data: LoginData) {
  * Verify session token
  */
 export async function verifySession(token: string): Promise<SessionData | null> {
+  if (!isRedisAvailable()) {
+    return null;
+  }
+
   const sessionKey = `${SESSION_PREFIX}${token}`;
   const data = await redisClient.get(sessionKey);
 
@@ -83,6 +92,10 @@ export async function verifySession(token: string): Promise<SessionData | null> 
  * Logout - destroy session
  */
 export async function logout(token: string): Promise<void> {
+  if (!isRedisAvailable()) {
+    return;
+  }
+  
   const sessionKey = `${SESSION_PREFIX}${token}`;
   await redisClient.del(sessionKey);
 }

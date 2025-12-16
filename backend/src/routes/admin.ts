@@ -1,5 +1,6 @@
 import { Router, Request, Response } from 'express';
 import * as adminService from '../services/adminService';
+import { postingService } from '../services/postingService';
 import { requireAuth } from '../middleware/auth';
 
 const router = Router();
@@ -158,6 +159,38 @@ router.patch('/posts/:id/decline', async (req: Request, res: Response) => {
     }
     console.error('Error declining post:', error);
     res.status(500).json({ error: 'Failed to decline post' });
+  }
+});
+
+/**
+ * POST /api/admin/posts/:id/publish
+ * Manually publish a specific approved post
+ */
+router.post('/posts/:id/publish', async (req: Request, res: Response) => {
+  try {
+    const id = parseInt(req.params.id);
+
+    if (isNaN(id)) {
+      return res.status(400).json({ error: 'Invalid post ID' });
+    }
+
+    const result = await postingService.publishPost(id);
+
+    if (result.success) {
+      res.json({
+        success: true,
+        message: 'Post published successfully',
+        instagram_post_id: result.instagram_post_id,
+      });
+    } else {
+      res.status(500).json({
+        success: false,
+        error: result.error || 'Failed to publish post',
+      });
+    }
+  } catch (error) {
+    console.error('Error publishing post:', error);
+    res.status(500).json({ error: 'Failed to publish post' });
   }
 });
 

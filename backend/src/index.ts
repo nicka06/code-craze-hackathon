@@ -5,8 +5,9 @@ import cookieParser from "cookie-parser";
 import prisma from "./config/prisma";
 import submissionsRouter from "./routes/submissions";
 import authRouter from "./routes/auth";
-import adminRouter from "./routes/admin";  // ← Add this
-import accessRequestsRouter from "./routes/access-requests";  // ← Add this
+import adminRouter from "./routes/admin";
+import accessRequestsRouter from "./routes/access-requests";
+import schedulerRouter from "./routes/scheduler";
 
 dotenv.config();
 const app = express();
@@ -21,8 +22,9 @@ app.use(cookieParser());
 // Routes
 app.use("/api/submissions", submissionsRouter);
 app.use("/api/auth", authRouter);
-app.use("/api/admin", adminRouter);  // ← Add this
-app.use("/api/access-requests", accessRequestsRouter);  // ← Add this
+app.use("/api/admin", adminRouter);
+app.use("/api/access-requests", accessRequestsRouter);
+app.use("/api/scheduler", schedulerRouter);
 
 const PORT = process.env.PORT || 4000;
 

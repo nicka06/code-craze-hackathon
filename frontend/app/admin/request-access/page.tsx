@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Link from 'next/link';
 import { submitAccessRequest } from '@/lib/api';
 
 export default function RequestAccessPage() {
@@ -29,53 +30,67 @@ export default function RequestAccessPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center py-12 px-4">
-      <div className="max-w-md w-full bg-white p-8 rounded-lg shadow">
-        <h1 className="text-3xl font-bold text-center mb-6">Request Admin Access</h1>
+      <div className="max-w-md w-full">
+        <Link href="/admin" className="block text-center mb-8">
+          <span className="text-3xl font-bold text-[#5ce7ff]">Tattle Admin</span>
+        </Link>
         
-        {success && (
-          <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded mb-4">
-            Request submitted successfully! We'll review it soon.
-          </div>
-        )}
-        
-        {error && (
-          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded mb-4">
-            {error}
-          </div>
-        )}
-        
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium mb-2">Email</label>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-              className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-purple-500"
-            />
-          </div>
+        <div className="bg-[#141414] border border-gray-800 p-8 rounded-xl">
+          <h1 className="text-2xl font-bold text-white mb-2">Request Access</h1>
+          <p className="text-gray-400 mb-6 text-sm">Submit a request to become an admin</p>
           
-          <div>
-            <label className="block text-sm font-medium mb-2">Message</label>
-            <textarea
-              value={message}
-              onChange={(e) => setMessage(e.target.value)}
-              required
-              rows={4}
-              className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-purple-500"
-              placeholder="Tell us why you need admin access..."
-            />
-          </div>
+          {success && (
+            <div className="bg-[#5ce7ff]/10 border border-[#5ce7ff]/20 text-[#5ce7ff] px-4 py-3 rounded-lg mb-6 text-sm">
+              Request submitted successfully! We'll review it soon.
+            </div>
+          )}
           
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full bg-purple-600 text-white py-3 rounded-lg font-semibold hover:bg-purple-700 disabled:bg-gray-400 transition"
-          >
-            {loading ? 'Submitting...' : 'Submit Request'}
-          </button>
-        </form>
+          {error && (
+            <div className="bg-red-500/10 border border-red-500/20 text-red-400 px-4 py-3 rounded-lg mb-6 text-sm">
+              {error}
+            </div>
+          )}
+          
+          <form onSubmit={handleSubmit} className="space-y-5">
+            <div>
+              <label className="block text-sm font-medium text-gray-300 mb-2">Email Address</label>
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                className="w-full px-4 py-3 bg-[#0a0a0a] border border-gray-800 rounded-lg text-white placeholder-gray-600 focus:border-[#5ce7ff] focus:ring-1 focus:ring-[#5ce7ff] outline-none transition"
+                placeholder="your@email.com"
+              />
+            </div>
+            
+            <div>
+              <label className="block text-sm font-medium text-gray-300 mb-2">Message</label>
+              <textarea
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
+                required
+                rows={4}
+                className="w-full px-4 py-3 bg-[#0a0a0a] border border-gray-800 rounded-lg text-white placeholder-gray-600 focus:border-[#5ce7ff] focus:ring-1 focus:ring-[#5ce7ff] outline-none transition resize-none"
+                placeholder="Tell us why you need admin access..."
+              />
+            </div>
+            
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full bg-[#5ce7ff] text-black py-3 rounded-lg font-semibold hover:bg-[#4dd4ee] disabled:bg-gray-800 disabled:text-gray-600 transition shadow-lg shadow-[#5ce7ff]/20"
+            >
+              {loading ? 'Submitting...' : 'Submit Request'}
+            </button>
+          </form>
+          
+          <div className="mt-6 text-center">
+            <Link href="/admin/login" className="text-sm text-gray-400 hover:text-[#5ce7ff] transition">
+              Already have access? Sign in
+            </Link>
+          </div>
+        </div>
       </div>
     </div>
   );

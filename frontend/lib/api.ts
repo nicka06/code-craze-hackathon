@@ -84,6 +84,12 @@ export async function declinePost(id: number, declined_message: string) {
   });
 }
 
+export async function publishPost(id: number) {
+  return apiCall(`/api/admin/posts/${id}/publish`, {
+    method: 'POST',
+  });
+}
+
 // Access Request API
 export async function submitAccessRequest(email: string, message: string) {
   return apiCall('/api/access-requests', {
