@@ -24,8 +24,7 @@ export async function getCurrentAdmin(): Promise<Admin | null> {
     return {
       id: 1,
       username: 'admin',
-      account_ids: [1],
-      created_at: new Date().toISOString()
+      account_ids: [1]
     };
   } catch {
     return null;
@@ -39,8 +38,7 @@ export async function handleLogin(username: string, password: string): Promise<A
   return {
     id: 1,
     username: 'admin',
-    account_ids: [1],
-    created_at: new Date().toISOString()
+    account_ids: [1]
   };
 }
 
