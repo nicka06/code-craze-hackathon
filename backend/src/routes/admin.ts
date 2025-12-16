@@ -12,8 +12,11 @@ const router = Router();
  */
 router.get('/posts', async (req: Request, res: Response) => {
   try {
-    const status = req.query.status as any;
+    const statusParam = req.query.status as string | undefined;
     const admin_account_ids = [1]; // Demo mode - admin has access to all accounts
+
+    // Convert empty string to undefined (for "All Posts" filter)
+    const status = statusParam && statusParam.trim() !== '' ? statusParam : undefined;
 
     // Validate status if provided
     const validStatuses = ['pending', 'approved', 'declined', 'posted', 'failed'];
@@ -26,7 +29,7 @@ router.get('/posts', async (req: Request, res: Response) => {
 
     const posts = await adminService.getPosts({
       admin_account_ids,
-      status: status || 'pending', // Default to pending
+      status: status as any, // undefined = all posts, otherwise filter by status
     });
 
     res.json({
