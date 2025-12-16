@@ -27,29 +27,39 @@ async function apiCall(endpoint: string, options: RequestInit = {}) {
 
 // Auth APIs
 export async function login(username: string, password: string) {
-  return apiCall('/api/auth/login', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ username, password }),
-  });
+  // Hardcoded credentials check
+  if (username === 'admin' && password === 'admin123') {
+    // Fake successful login
+    localStorage.setItem('isAuthenticated', 'true');
+    return { success: true, message: 'Login successful' };
+  } else {
+    throw new Error('Invalid username or password');
+  }
 }
 
 export async function logout() {
-  return apiCall('/api/auth/logout', {
-    method: 'POST',
-  });
+  localStorage.removeItem('isAuthenticated');
+  return { success: true };
 }
 
 export async function verifyAuth() {
-  return apiCall('/api/auth/verify');
+  const isAuthenticated = localStorage.getItem('isAuthenticated') === 'true';
+  if (isAuthenticated) {
+    return { success: true };
+  } else {
+    throw new Error('Not authenticated');
+  }
 }
 
 // Submission APIs
 export async function submitPost(formData: FormData) {
-  return apiCall('/api/submissions', {
-    method: 'POST',
-    body: formData, // multipart/form-data
-  });
+  // Fake submission - just return success after a delay
+  await new Promise(resolve => setTimeout(resolve, 1000));
+  return { 
+    success: true, 
+    message: 'Submission received! We\'ll review it soon.',
+    id: Math.floor(Math.random() * 10000)
+  };
 }
 
 export async function getSubmission(id: number) {
@@ -58,30 +68,38 @@ export async function getSubmission(id: number) {
 
 // Admin APIs
 export async function getPosts(status?: string) {
-  const query = status ? `?status=${status}` : '';
-  return apiCall(`/api/admin/posts${query}`);
+  // Fake data - return empty array for now
+  await new Promise(resolve => setTimeout(resolve, 500));
+  return { 
+    success: true, 
+    data: [],
+    total: 0
+  };
 }
 
 export async function getPostStats() {
-  return apiCall('/api/admin/posts/stats');
+  await new Promise(resolve => setTimeout(resolve, 500));
+  return { 
+    pending: 0,
+    approved: 0,
+    declined: 0,
+    posted: 0
+  };
 }
 
 export async function getPost(id: number) {
-  return apiCall(`/api/admin/posts/${id}`);
+  await new Promise(resolve => setTimeout(resolve, 500));
+  throw new Error('Post not found');
 }
 
 export async function approvePost(id: number) {
-  return apiCall(`/api/admin/posts/${id}/approve`, {
-    method: 'PATCH',
-  });
+  await new Promise(resolve => setTimeout(resolve, 500));
+  return { success: true, message: 'Post approved' };
 }
 
 export async function declinePost(id: number, declined_message: string) {
-  return apiCall(`/api/admin/posts/${id}/decline`, {
-    method: 'PATCH',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ declined_message }),
-  });
+  await new Promise(resolve => setTimeout(resolve, 500));
+  return { success: true, message: 'Post declined' };
 }
 
 export async function publishPost(id: number) {
