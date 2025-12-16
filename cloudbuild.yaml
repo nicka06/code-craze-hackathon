@@ -24,8 +24,6 @@ steps:
       - '--allow-unauthenticated'
       - '--port'
       - '8080'
-      - '--set-env-vars'
-      - 'PORT=8080,DATABASE_URL=postgresql://postgres.ivljfcpxjkoslwvgnldr:yzovpbQzotWXrWe9@aws-0-us-west-2.pooler.supabase.com:6543/postgres?pgbouncer=true&connection_limit=1,GCS_BUCKET_NAME=tattle_news_storage_bucket,RESEND_API_KEY=re_2oaKE3hs_ENzwi68x8P7oxH6CHhgLSr44,FROM_EMAIL=support@tattle.social,ADMIN_EMAIL=nick@tattle.social,FRONTEND_URL=https://code-craze-hackathon.vercel.app'
 
 options:
   logging: CLOUD_LOGGING_ONLY

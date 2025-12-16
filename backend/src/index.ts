@@ -12,9 +12,31 @@ import schedulerRouter from "./routes/scheduler";
 dotenv.config();
 const app = express();
 
-// Simple CORS - allow Vercel and localhost
+// Allow requests from frontend (including Vercel preview URLs)
+const allowedOrigins = [
+  process.env.FRONTEND_URL || 'http://localhost:3000',
+  'http://localhost:3000',
+  /\.vercel\.app$/, // Allow all Vercel preview URLs
+];
+
 app.use(cors({
-  origin: true, // Allow all origins for now (we'll restrict later)
+  origin: (origin, callback) => {
+    // Allow requests with no origin (mobile apps, Postman, etc.)
+    if (!origin) return callback(null, true);
+    
+    // Check if origin is allowed
+    const isAllowed = allowedOrigins.some(allowed => {
+      if (typeof allowed === 'string') return allowed === origin;
+      if (allowed instanceof RegExp) return allowed.test(origin);
+      return false;
+    });
+    
+    if (isAllowed) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true,
 }));
 app.use(express.json());
