@@ -53,13 +53,11 @@ export async function verifyAuth() {
 
 // Submission APIs
 export async function submitPost(formData: FormData) {
-  // Fake submission - just return success after a delay
-  await new Promise(resolve => setTimeout(resolve, 1000));
-  return { 
-    success: true, 
-    message: 'Submission received! We\'ll review it soon.',
-    id: Math.floor(Math.random() * 10000)
-  };
+  // Real submission - calls backend and sends emails
+  return apiCall('/api/submissions', {
+    method: 'POST',
+    body: formData, // multipart/form-data
+  });
 }
 
 export async function getSubmission(id: number) {
