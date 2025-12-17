@@ -155,9 +155,9 @@ export default function PendingPostsPage() {
               
               <div className="text-center">
                 <h3 className="text-sm font-medium text-gray-400 mb-4">Media ({selectedPost.media.length})</h3>
-                <div className="grid grid-cols-2 gap-4 max-w-md mx-auto">
+                <div className="flex flex-wrap justify-center gap-4 max-w-2xl mx-auto">
                   {selectedPost.media.map((url, idx) => (
-                    <div key={idx} className="aspect-square bg-[#0a0a0a] rounded-lg overflow-hidden">
+                    <div key={idx} className="aspect-square bg-[#0a0a0a] rounded-lg overflow-hidden w-48">
                       <img src={url} alt={`Media ${idx + 1}`} className="w-full h-full object-cover" />
                     </div>
                   ))}
