@@ -19,6 +19,7 @@ export default function TattleNewsUploadPage() {
   const [caption, setCaption] = useState('');
   const [email, setEmail] = useState('');
   const [instagramUsername, setInstagramUsername] = useState('');
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
     setImages(acceptedFiles);
@@ -55,11 +56,10 @@ export default function TattleNewsUploadPage() {
       });
 
       await submitPost(formData);
-      alert('Submission successful! Check your email for confirmation.');
-      router.push('/accounts');
+      setLoading(false);
+      setShowSuccessModal(true);
     } catch (error) {
       alert('Submission failed: ' + (error instanceof Error ? error.message : 'Unknown error'));
-    } finally {
       setLoading(false);
     }
   };
@@ -264,6 +264,34 @@ export default function TattleNewsUploadPage() {
           </button>
         </form>
       </div>
+
+      {/* Success Modal */}
+      {showSuccessModal && (
+        <div className="fixed inset-0 bg-black/80 flex items-center justify-center p-4 z-50">
+          <div className="bg-[#111111] border border-white/10 rounded-2xl p-8 max-w-md w-full text-center">
+            <div className="mb-6">
+              <div className="w-20 h-20 bg-gradient-to-r from-[#5ce7ff] to-[#ff1fa9] rounded-full flex items-center justify-center mx-auto mb-4">
+                <svg className="w-10 h-10 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                </svg>
+              </div>
+              <h2 className="text-3xl font-bold text-white mb-2">Submission Successful!</h2>
+              <p className="text-gray-400">
+                Your content has been submitted. Check your email for confirmation.
+              </p>
+            </div>
+            <button
+              onClick={() => {
+                setShowSuccessModal(false);
+                router.push('/accounts');
+              }}
+              className="w-full bg-gradient-to-r from-[#5ce7ff] to-[#ff1fa9] text-black py-3 rounded-xl font-bold hover:shadow-lg hover:shadow-[#5ce7ff]/30 transition-all"
+            >
+              Back to Accounts
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

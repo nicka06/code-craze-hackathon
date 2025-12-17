@@ -143,19 +143,19 @@ export default function PendingPostsPage() {
             </div>
             
             <div className="p-6 space-y-6">
-              <div>
+              <div className="text-center">
                 <h3 className="text-sm font-medium text-gray-400 mb-2">Caption</h3>
-                <p className="text-white whitespace-pre-wrap">{selectedPost.caption}</p>
+                <p className="text-white whitespace-pre-wrap text-center">{selectedPost.caption}</p>
               </div>
               
-              <div>
+              <div className="text-center">
                 <h3 className="text-sm font-medium text-gray-400 mb-2">Contact</h3>
                 <p className="text-white">{selectedPost.email}</p>
               </div>
               
-              <div>
-                <h3 className="text-sm font-medium text-gray-400 mb-2">Media ({selectedPost.media.length})</h3>
-                <div className="grid grid-cols-2 gap-4">
+              <div className="text-center">
+                <h3 className="text-sm font-medium text-gray-400 mb-4">Media ({selectedPost.media.length})</h3>
+                <div className="grid grid-cols-2 gap-4 max-w-md mx-auto">
                   {selectedPost.media.map((url, idx) => (
                     <div key={idx} className="aspect-square bg-[#0a0a0a] rounded-lg overflow-hidden">
                       <img src={url} alt={`Media ${idx + 1}`} className="w-full h-full object-cover" />
@@ -164,7 +164,7 @@ export default function PendingPostsPage() {
                 </div>
               </div>
               
-              <div className="flex gap-3 pt-4">
+              <div className="flex gap-3 pt-4 max-w-md mx-auto">
                 <button
                   onClick={() => handleApprove(selectedPost.id)}
                   className="flex-1 px-6 py-3 bg-[#5ce7ff] text-black rounded-lg hover:bg-[#4dd4ee] transition font-semibold"
